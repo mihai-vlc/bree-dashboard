@@ -4,6 +4,7 @@ let { Liquid } = require('liquidjs');
 let path = require('path');
 
 let store = require('./store');
+const monitor = require('./monitor');
 
 // Generate Liquid Engine
 const engine = new Liquid({
@@ -30,10 +31,10 @@ server.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' });
 server.get('/', async (request, reply) => {
     let jobs = store.getJobs();
     const csrfToken = await reply.generateCsrf();
+    jobs = jobs.map((j) => ({ ...j, csrfToken }));
 
     return reply.view('./views/index.liquid', {
         jobs: jobs,
-        csrfToken: csrfToken,
     });
 });
 
@@ -55,6 +56,25 @@ server.post(
         if (action == 'stop') {
             await runner.stopJob(jobId);
         }
+        reply.redirect(302, '/');
+    }
+);
+
+server.post(
+    '/executions',
+    {
+        preValidation: function (request, reply) {
+            return server.csrfProtection.apply(this, arguments);
+        },
+    },
+    async (request, reply) => {
+        let action = request.query.action;
+        let jobId = request.query.id;
+
+        if (action == 'clear') {
+            monitor.clearExecution(jobId);
+        }
+
         reply.redirect(302, '/');
     }
 );

@@ -1,0 +1,27 @@
+<ul class="uk-list uk-list-divider">
+    {% for execution in item.topExecutions %}
+    <li>
+        #{{ execution.id }} -
+        {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
+        {{ execution.duration }} ms
+    </li>
+    {% endfor %}
+</ul>
+{% if item.otherExecutions.length > 0 %}
+<button
+    class="uk-button uk-button-default uk-button-small"
+    uk-toggle="target: #other-{{ item.name }}"
+    type="button"
+>
+    Toggle older executions
+</button>
+{% endif %}
+<ul id="other-{{ item.name }}" class="uk-list uk-list-divider" hidden>
+    {% for execution in item.otherExecutions %}
+    <li>
+        #{{ execution.id }} -
+        {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
+        {{ execution.duration }} ms
+    </li>
+    {% endfor %}
+</ul>

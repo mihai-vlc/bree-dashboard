@@ -38,7 +38,7 @@ module.exports = {
     getExecutions(id) {
         let results = db
             .prepare(
-                `SELECT start_time, end_time 
+                `SELECT rowid, start_time, end_time 
                 FROM jobsExecution 
                 WHERE job_id = ? 
                 ORDER BY start_time DESC`
@@ -48,10 +48,15 @@ module.exports = {
             let startTime = new Date(row.start_time);
             let endTime = new Date(row.end_time);
             return {
+                id: row.rowid,
                 startTime: startTime,
                 endTime: endTime,
                 duration: endTime - startTime,
             };
         });
+    },
+
+    clearExecution(jobId) {
+        db.prepare(`DELETE FROM jobsExecution WHERE job_id = ?`).run(jobId);
     },
 };

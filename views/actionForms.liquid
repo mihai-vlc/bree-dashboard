@@ -1,0 +1,24 @@
+{% if item.status.id == 'active' %}
+<form method="POST" action="/job?action=stop&id={{ item.name }}">
+    <input type="hidden" name="_csrf" value="{{ item.csrfToken }}" />
+    <button class="uk-button uk-button-danger uk-button-small">Stop</button>
+</form>
+{% else %}
+<form method="POST" action="/job?action=run&id={{ item.name }}">
+    <input type="hidden" name="_csrf" value="{{ item.csrfToken }}" />
+
+    <button class="uk-button uk-button-primary uk-button-small">Run</button>
+</form>
+{% endif %}
+
+<form
+    class="uk-margin-small-top"
+    method="POST"
+    action="/executions?action=clear&id={{ item.name }}"
+>
+    <input type="hidden" name="_csrf" value="{{ item.csrfToken }}" />
+
+    <button class="uk-button uk-button-secondary uk-button-small">
+        Clear Executions
+    </button>
+</form>
