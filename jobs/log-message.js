@@ -1,38 +1,22 @@
-const { parentPort } = require('worker_threads');
-var logger = require('../logger');
+let AbstractWorker = require('../worker/AbstractWorker');
 
-// job logic
-logger.error('Something happned');
+class Worker extends AbstractWorker {
+    async run() {
+        return new Promise((resolve, reject) => {
+            this.logger.info('Starting the execution !');
 
-let timeoutId = setTimeout(() => {
-    logger.info('Finished');
-
-    // signal to parent that the job is done
-    done();
-}, 15000);
-
-function done() {
-    if (parentPort) {
-        parentPort.postMessage('done');
-    } else {
-        process.exit(0);
+            this.timeoutId = setTimeout(() => {
+                this.logger.info('Finished');
+                resolve();
+            }, 15000);
+        });
     }
-}
-function cancel() {
-    // cleanup for the current job
-    clearTimeout(timeoutId);
-
-    if (parentPort) {
-        parentPort.postMessage('cancelled');
-    } else {
-        process.exit(0);
+    async onCancel() {
+        clearTimeout(this.timeoutId);
     }
 }
 
-if (parentPort) {
-    parentPort.once('message', (message) => {
-        if (message === 'cancel') {
-            return cancel();
-        }
-    });
-}
+let worker = new Worker(__filename);
+worker.start().catch(function (e) {
+    console.error(e);
+});

@@ -5,37 +5,29 @@ db.prepare(
     `CREATE TABLE IF NOT EXISTS jobsExecution (
     job_id TEXT NOT NULL,
     start_time INTEGER NOT NULL,
-    end_time INTEGER NOT NULL
+    end_time INTEGER
 )`
 ).run();
 
-let runningJobs = {};
-
 module.exports = {
-    init(bree) {
-        bree.on('worker created', (name) => {
-            runningJobs[name] = new Date();
-        });
+    startExecution(jobId) {
+        let result = db
+            .prepare(
+                'INSERT INTO jobsExecution (job_id, start_time) VALUES (?, ?)'
+            )
+            .run(jobId, new Date().getTime());
 
-        bree.on('worker deleted', (name) => {
-            if (name == undefined) {
-                return;
-            }
-
-            let startTime = runningJobs[name].getTime();
-            let endTime = new Date().getTime();
-
-            delete runningJobs[name];
-
-            db.prepare('INSERT INTO jobsExecution VALUES (?, ?, ?)').run(
-                name,
-                startTime,
-                endTime
-            );
-        });
+        return result.lastInsertRowid.toFixed();
     },
 
-    getExecutions(id) {
+    endExecution(executionId) {
+        db.prepare('UPDATE jobsExecution SET end_time = ? WHERE rowid = ?').run(
+            new Date().getTime(),
+            executionId
+        );
+    },
+
+    getExecutions(jobId) {
         let results = db
             .prepare(
                 `SELECT rowid, start_time, end_time 
@@ -43,20 +35,42 @@ module.exports = {
                 WHERE job_id = ? 
                 ORDER BY start_time DESC`
             )
-            .all(id);
+            .all(jobId);
         return results.map(function (row) {
             let startTime = new Date(row.start_time);
-            let endTime = new Date(row.end_time);
+            let endTime = null;
+
+            if (row.end_time) {
+                endTime = new Date(row.end_time);
+            }
+
             return {
                 id: row.rowid,
                 startTime: startTime,
                 endTime: endTime,
-                duration: endTime - startTime,
+                duration: endTime ? endTime - startTime : 'pending',
             };
         });
     },
 
     clearExecution(jobId) {
         db.prepare(`DELETE FROM jobsExecution WHERE job_id = ?`).run(jobId);
+        db.prepare(`DELETE FROM log WHERE job_id = ?`).run(jobId);
+    },
+
+    getExecutionLogs(executionId) {
+        let results = db
+            .prepare(
+                `SELECT timestamp, message 
+            FROM log 
+            WHERE executionId = ? 
+            ORDER BY timestamp ASC`
+            )
+            .all(executionId);
+        return results.map((row) => ({
+            timestamp: new Date(row.timestamp),
+            level: row.level,
+            message: row.message,
+        }));
     },
 };

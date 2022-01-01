@@ -1,0 +1,9 @@
+<div class="uk-modal-body">
+    <h2>Execution logs for #{{ executionId }}</h2>
+    <dl class="uk-description-list uk-description-list-divider">
+        {% for item in logs %}
+        <dt>{{ item.timestamp }}</dt>
+        <dd>{{ item.message }}</dd>
+        {% endfor %}
+    </dl>
+</div>

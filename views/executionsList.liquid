@@ -1,9 +1,15 @@
 <ul class="uk-list uk-list-divider">
     {% for execution in item.topExecutions %}
     <li>
-        #{{ execution.id }} -
-        {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
-        {{ execution.duration }} ms
+        <a
+            href="#"
+            class="js-open-execution-log"
+            data-execution-id="{{ execution.id }}"
+        >
+            #{{ execution.id }} -
+            {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
+            {{ execution.duration }} ms
+        </a>
     </li>
     {% endfor %}
 </ul>
@@ -19,9 +25,15 @@
 <ul id="other-{{ item.name }}" class="uk-list uk-list-divider" hidden>
     {% for execution in item.otherExecutions %}
     <li>
-        #{{ execution.id }} -
-        {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
-        {{ execution.duration }} ms
+        <a
+            href="#"
+            class="js-open-execution-log"
+            data-execution-id="{{ execution.id }}"
+        >
+            #{{ execution.id }} -
+            {{ execution.startTime | date: '%Y-%b-%d %H:%M:%S' }} -
+            {{ execution.duration }} ms
+        </a>
     </li>
     {% endfor %}
 </ul>

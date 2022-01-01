@@ -5,7 +5,7 @@ const store = require('./store');
 let monitor = require('./monitor');
 
 const bree = new Bree({
-    logger: logger,
+    logger: logger.globalLogger,
     jobs: [
         {
             name: 'log-message',
@@ -30,7 +30,5 @@ const bree = new Bree({
 });
 
 store.init(bree);
-monitor.init(bree);
-
 bree.start();
 server.start();

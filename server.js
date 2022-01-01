@@ -28,6 +28,11 @@ server.register(require('@fastify/session'), {
 });
 server.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' });
 
+server.register(require('fastify-static'), {
+    root: path.join(__dirname, 'public'),
+    prefix: '/public/', // optional: default '/'
+});
+
 server.get('/', async (request, reply) => {
     let jobs = store.getJobs();
     const csrfToken = await reply.generateCsrf();
@@ -73,11 +78,22 @@ server.post(
 
         if (action == 'clear') {
             monitor.clearExecution(jobId);
+            reply.redirect(302, '/');
+            return;
         }
 
-        reply.redirect(302, '/');
+        reply.send('Invalid action !');
     }
 );
+
+server.get('/executions', function (request, reply) {
+    let executionId = request.query.id;
+
+    return reply.view('./views/logs.liquid', {
+        logs: monitor.getExecutionLogs(executionId),
+        executionId: executionId,
+    });
+});
 
 // Run the server!
 const start = async () => {

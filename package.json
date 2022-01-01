@@ -21,9 +21,11 @@
         "fastify-cookie": "^5.4.0",
         "fastify-csrf": "^3.1.0",
         "fastify-formbody": "^5.2.0",
+        "fastify-static": "^4.5.0",
         "liquidjs": "^9.31.0",
         "point-of-view": "^5.0.0",
-        "winston": "^3.3.3"
+        "winston": "^3.3.3",
+        "winston-transport": "^4.4.1"
     },
     "devDependencies": {
         "nodemon": "^2.0.15"
