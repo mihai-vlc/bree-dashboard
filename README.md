@@ -16,7 +16,7 @@ pnpm run start
 
 ## Release notes
 
-Jan 1st 2021 - Initial release
+Jan 1st 2022 - Initial release
 
 ## Author
 
