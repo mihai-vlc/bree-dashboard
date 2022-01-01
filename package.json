@@ -1,14 +1,17 @@
 {
-    "name": "jobs-runner",
+    "name": "bree-dashboard",
     "version": "1.0.0",
-    "description": "",
+    "description": "A simple nodejs application to run and display bree jobs.",
     "main": "main.js",
     "scripts": {
-        "start:dev": "nodemon main.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node main.js",
+        "start:dev": "nodemon main.js"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": [
+        "bree",
+        "dashboard"
+    ],
+    "author": "Mihai Ionut Vilcu",
     "license": "ISC",
     "dependencies": {
         "better-sqlite3": "^7.4.6",

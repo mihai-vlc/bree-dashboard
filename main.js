@@ -20,6 +20,9 @@ const bree = new Bree({
         },
     ],
     workerMessageHandler(metadata) {
+        // workaround until the `worker deleted` is properly
+        // emitted from the bree library
+        // https://github.com/breejs/bree/issues/151
         if (metadata.message == 'done') {
             bree.emit('worker deleted', metadata.name);
         }
