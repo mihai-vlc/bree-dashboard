@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Jobs Dashboard</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css"
+        />
+        <style>
+            .bree-dashboard .tm-navbar-container {
+                background: linear-gradient(to left, #28a5f5, #1e87f0);
+            }
+
+            .bree-dashboard .tm-navbar-container .uk-logo {
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body class="bree-dashboard">
+        <nav
+            class="uk-navbar-container uk-margin tm-navbar-container"
+            uk-navbar
+        >
+            <div class="uk-container uk-flex-1">
+                <div class="uk-navbar-left">
+                    <a class="uk-navbar-item uk-logo" href="#"
+                        >Bree Dashboard</a
+                    >
+                </div>
+            </div>
+        </nav>
+
+        <div class="uk-container">
+            <table class="uk-table uk-table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Interval</th>
+                        <th>Path</th>
+                        <th>Executions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in jobs %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            {% if item.status.id == 'active' %}
+                            <span uk-spinner="ratio: 0.5"></span>
+                            {% else %}
+                            <span uk-icon="{{ item.status.icon }}"></span>
+                            {% endif %}
+                            {{ item.status.label }}
+                        </td>
+                        <td>{{ item.interval }}</td>
+                        <td>{{ item.path }}</td>
+                        <td>
+                            <ul class="uk-list uk-list-divider">
+                                {% for execution in item.topExecutions %}
+                                <li>
+                                    {{
+                                        execution.startTime
+                                            | date: '%Y-%b-%d %H:%M:%S'
+                                    }}
+                                    - {{ execution.duration }} ms
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% if item.otherExecutions.length > 0 %}
+                            <button
+                                class="
+                                    uk-button uk-button-default uk-button-small
+                                "
+                                uk-toggle="target: #other-{{ item.name }}"
+                                type="button"
+                            >
+                                Toggle older executions
+                            </button>
+                            {% endif %}
+                            <ul
+                                id="other-{{ item.name }}"
+                                class="uk-list uk-list-divider"
+                                hidden
+                            >
+                                {% for execution in item.otherExecutions %}
+                                <li>
+                                    {{
+                                        execution.startTime
+                                            | date: '%Y-%b-%d %H:%M:%S'
+                                    }}
+                                    - {{ execution.duration }} ms
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td>
+                            {% if item.status.id == 'active' %}
+                            <a href="/job?action=stop&id={{ item.name }}"
+                                >Stop</a
+                            >
+                            {% else %}
+                            <a href="/job?action=run&id={{ item.name }}">Run</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="uk-container uk-text-center uk-margin-xlarge-top">
+            Made with 💗 by
+            <a href="https://github.com/ionutvmi">Mihai Ionut Vilcu</a>
+        </div>
+
+        <!-- UIkit JS -->
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit-icons.min.js"></script>
+    </body>
+</html>

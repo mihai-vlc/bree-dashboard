@@ -1,0 +1,24 @@
+{
+    "name": "jobs-runner",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start:dev": "nodemon main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "better-sqlite3": "^7.4.6",
+        "bree": "^7.1.4",
+        "fastify": "^3.25.3",
+        "liquidjs": "^9.31.0",
+        "point-of-view": "^5.0.0",
+        "winston": "^3.3.3"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
