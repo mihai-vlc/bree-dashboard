@@ -37,9 +37,11 @@ server.get('/', async (request, reply) => {
     let jobs = store.getJobs();
     const csrfToken = await reply.generateCsrf();
     jobs = jobs.map((j) => ({ ...j, csrfToken }));
+    let format = request.query.format;
 
     return reply.view('./views/index.liquid', {
         jobs: jobs,
+        layoutName: format == 'ajax' ? 'layouts/empty' : 'layouts/fullPage',
     });
 });
 

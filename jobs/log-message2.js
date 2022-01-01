@@ -3,6 +3,12 @@ let AbstractWorker = require('../worker/AbstractWorker');
 class Worker extends AbstractWorker {
     async run() {
         this.logger.info('Message logged right away.');
+
+        if (Math.random() > 0.5) {
+            return 'ERROR';
+        }
+
+        return 'EXECUTION_SUCCESSFUL';
     }
 }
 

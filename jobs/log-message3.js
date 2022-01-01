@@ -2,7 +2,7 @@ let AbstractWorker = require('../worker/AbstractWorker');
 
 class Worker extends AbstractWorker {
     async run() {
-        this.logger.info('Something happened !');
+        this.logger.info('Something happened but only once !');
     }
 }
 

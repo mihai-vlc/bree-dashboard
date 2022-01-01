@@ -1,10 +1,8 @@
 const winston = require('winston');
 
-const myFormat = winston.format.printf(
-    ({ level, message, label, timestamp }) => {
-        return `${timestamp} [${level.toUpperCase()}]: ${message}`;
-    }
-);
+const myFormat = winston.format.printf(({ level, message, label, timestamp }) => {
+    return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+});
 
 module.exports = {
     globalLogger: winston.createLogger({
@@ -24,10 +22,7 @@ module.exports = {
                 jobId: jobId,
                 executionId: executionId,
             },
-            format: winston.format.combine(
-                winston.format.timestamp(),
-                myFormat
-            ),
+            format: winston.format.combine(winston.format.timestamp(), myFormat),
             transports: [
                 new wbs({
                     db: './jobs.db',

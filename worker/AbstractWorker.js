@@ -18,17 +18,16 @@ module.exports = class AbstractWorker {
 
     async start() {
         this.executionId = monitor.startExecution(this.jobId);
-        this.logger = require('../logger').getLogger(
-            this.jobId,
-            this.executionId
-        );
+        this.logger = require('../logger').getLogger(this.jobId, this.executionId);
 
+        this.resultCode = null;
         try {
-            await this.run();
-            this.done();
+            this.resultCode = await this.run();
         } catch (e) {
+            this.resultCode = 'ERROR';
             this.logger.error(e.message + e.stack);
         }
+        this.done();
     }
 
     async run() {
@@ -37,7 +36,10 @@ module.exports = class AbstractWorker {
     async onCancel() {}
 
     done() {
-        monitor.endExecution(this.executionId);
+        if (this.resultCode == undefined) {
+            this.resultCode = 'SUCCESS';
+        }
+        monitor.endExecution(this.executionId, this.resultCode);
 
         if (parentPort) {
             parentPort.postMessage('done');
