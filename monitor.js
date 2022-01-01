@@ -66,7 +66,7 @@ module.exports = {
             .prepare(
                 `SELECT timestamp, message 
             FROM log 
-            WHERE executionId = ? 
+            WHERE execution_id = ? 
             ORDER BY timestamp ASC`
             )
             .all(executionId);

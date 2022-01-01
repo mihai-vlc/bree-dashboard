@@ -1,18 +1,20 @@
 {% layout layoutName %} {% block preContent %}
-<label>
-    <input class="uk-checkbox js-auto-refresh" type="checkbox" />
-    <span>Auto-referesh </span>
-</label>
-<label>
-    every
-    <input
-        class="js-referesh-interval uk-input uk-form-width-small uk-form-small"
-        type="number"
-        min="1"
-        value="60"
-    />
-    seconds
-</label>
+<div class="js-nprogress uk-padding-small">
+    <label>
+        <input class="uk-checkbox js-auto-refresh" type="checkbox" />
+        <span>Auto-referesh </span>
+    </label>
+    <label>
+        every
+        <input
+            class="js-referesh-interval uk-input uk-form-width-small uk-form-small"
+            type="number"
+            min="1"
+            value="60"
+        />
+        seconds
+    </label>
+</div>
 {% endblock %} {% block content %}
 <table class="uk-table uk-table-striped">
     <thead>

@@ -7,7 +7,7 @@ class Worker extends AbstractWorker {
 
             this.timeoutId = setTimeout(() => {
                 this.logger.info('Finished');
-                resolve();
+                resolve('CUSTOM_SUCCESS');
             }, 15000);
         });
     }

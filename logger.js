@@ -19,14 +19,14 @@ module.exports = {
         return winston.createLogger({
             level: 'debug',
             defaultMeta: {
-                jobId: jobId,
-                executionId: executionId,
+                job_id: jobId,
+                execution_id: executionId,
             },
             format: winston.format.combine(winston.format.timestamp(), myFormat),
             transports: [
                 new wbs({
                     db: './jobs.db',
-                    params: ['level', 'message', 'jobId', 'executionId'],
+                    params: ['level', 'message', 'job_id', 'execution_id'],
                 }),
                 new winston.transports.File({ filename: 'log.txt' }),
                 new winston.transports.Console(),

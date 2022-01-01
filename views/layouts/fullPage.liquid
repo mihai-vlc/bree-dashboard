@@ -17,6 +17,16 @@
             .bree-dashboard .tm-navbar-container .uk-logo {
                 color: #fff;
             }
+            .progress-bar-animation {
+                background: linear-gradient(currentColor 0 0) top left/100% 3px no-repeat;
+                animation: progress-bar 5s linear infinite;
+            }
+
+            @keyframes progress-bar {
+                to {
+                    background-size: 0% 3px;
+                }
+            }
         </style>
     </head>
     <body class="bree-dashboard">
