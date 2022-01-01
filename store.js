@@ -30,8 +30,8 @@ module.exports = {
 
     getRunner() {
         return {
-            runJob: (id) => state.bree.run(id),
-            stopJob: (id) => state.bree.stop(id),
+            runJob: async (id) => state.bree.run(id),
+            stopJob: async (id) => state.bree.stop(id),
         };
     },
 

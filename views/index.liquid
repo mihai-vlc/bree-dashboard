@@ -100,11 +100,46 @@
                         </td>
                         <td>
                             {% if item.status.id == 'active' %}
-                            <a href="/job?action=stop&id={{ item.name }}"
-                                >Stop</a
+                            <form
+                                method="POST"
+                                action="/job?action=stop&id={{ item.name }}"
                             >
+                                <input
+                                    type="hidden"
+                                    name="_csrf"
+                                    value="{{ csrfToken }}"
+                                />
+                                <button
+                                    class="
+                                        uk-button
+                                        uk-button-danger
+                                        uk-button-small
+                                    "
+                                >
+                                    Stop
+                                </button>
+                            </form>
                             {% else %}
-                            <a href="/job?action=run&id={{ item.name }}">Run</a>
+                            <form
+                                method="POST"
+                                action="/job?action=run&id={{ item.name }}"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="_csrf"
+                                    value="{{ csrfToken }}"
+                                />
+
+                                <button
+                                    class="
+                                        uk-button
+                                        uk-button-primary
+                                        uk-button-small
+                                    "
+                                >
+                                    Run
+                                </button>
+                            </form>
                             {% endif %}
                         </td>
                     </tr>

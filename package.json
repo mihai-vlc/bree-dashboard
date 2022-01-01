@@ -14,9 +14,13 @@
     "author": "Mihai Ionut Vilcu",
     "license": "ISC",
     "dependencies": {
+        "@fastify/session": "^6.3.0",
         "better-sqlite3": "^7.4.6",
         "bree": "^7.1.4",
         "fastify": "^3.25.3",
+        "fastify-cookie": "^5.4.0",
+        "fastify-csrf": "^3.1.0",
+        "fastify-formbody": "^5.2.0",
         "liquidjs": "^9.31.0",
         "point-of-view": "^5.0.0",
         "winston": "^3.3.3"

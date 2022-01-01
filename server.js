@@ -1,4 +1,4 @@
-const server = require('fastify')({ logger: false });
+const server = require('fastify')({ logger: true });
 const POV = require('point-of-view');
 let { Liquid } = require('liquidjs');
 let path = require('path');
@@ -17,26 +17,47 @@ server.register(POV, {
     },
 });
 
-server.get('/', (request, response) => {
+server.register(require('fastify-formbody'));
+server.register(require('fastify-cookie'));
+server.register(require('@fastify/session'), {
+    secret: '12344123441234412344123441234412344',
+    cookie: {
+        secure: 'auto',
+    },
+});
+server.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' });
+
+server.get('/', async (request, reply) => {
     let jobs = store.getJobs();
-    response.view('./views/index.liquid', {
+    const csrfToken = await reply.generateCsrf();
+
+    return reply.view('./views/index.liquid', {
         jobs: jobs,
+        csrfToken: csrfToken,
     });
 });
 
-server.get('/job', (request, reply) => {
-    let action = request.query.action;
-    let jobId = request.query.id;
-    let runner = store.getRunner();
+server.post(
+    '/job',
+    {
+        preValidation: function (request, reply) {
+            return server.csrfProtection.apply(this, arguments);
+        },
+    },
+    async (request, reply) => {
+        let action = request.query.action;
+        let jobId = request.query.id;
+        let runner = store.getRunner();
 
-    if (action == 'run') {
-        runner.runJob(jobId);
+        if (action == 'run') {
+            await runner.runJob(jobId);
+        }
+        if (action == 'stop') {
+            await runner.stopJob(jobId);
+        }
+        reply.redirect(302, '/');
     }
-    if (action == 'stop') {
-        runner.stopJob(jobId);
-    }
-    reply.redirect(302, '/');
-});
+);
 
 // Run the server!
 const start = async () => {
