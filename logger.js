@@ -1,4 +1,5 @@
 const winston = require('winston');
+const path = require('path');
 
 const myFormat = winston.format.printf(({ level, message, label, timestamp }) => {
     return `${timestamp} [${level.toUpperCase()}]: ${message}`;
@@ -9,7 +10,10 @@ module.exports = {
         level: 'debug',
         format: winston.format.combine(winston.format.timestamp(), myFormat),
         transports: [
-            new winston.transports.File({ filename: 'log.txt' }),
+            new winston.transports.File({
+                filename: 'log.txt',
+                dirname: __dirname,
+            }),
             new winston.transports.Console(),
         ],
     }),
@@ -25,10 +29,13 @@ module.exports = {
             format: winston.format.combine(winston.format.timestamp(), myFormat),
             transports: [
                 new wbs({
-                    db: './jobs.db',
+                    db: path.join(__dirname, 'jobs.db'),
                     params: ['level', 'message', 'job_id', 'execution_id'],
                 }),
-                new winston.transports.File({ filename: 'log.txt' }),
+                new winston.transports.File({
+                    filename: 'log.txt',
+                    dirname: __dirname,
+                }),
                 new winston.transports.Console(),
             ],
         });

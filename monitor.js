@@ -1,5 +1,6 @@
+const path = require('path');
 const Database = require('better-sqlite3');
-var db = new Database('./jobs.db');
+var db = new Database(path.join(__dirname, '/jobs.db'));
 
 db.prepare(
     `CREATE TABLE IF NOT EXISTS jobsExecution (
