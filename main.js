@@ -1,30 +1,40 @@
+const fs = require('fs');
+const path = require('path');
+
 const Bree = require('bree');
 const logger = require('./logger');
 const server = require('./server');
 const store = require('./store');
-let monitor = require('./monitor');
+
+let externalConfig = {};
+
+if (fs.existsSync('./external-jobs/config.js')) {
+    externalConfig = require('./external-jobs/config');
+}
+
+// example jobs used as fallback if the external config doesn't exist
+let jobs = [
+    {
+        name: 'log-message',
+        interval: '30s',
+    },
+    {
+        name: 'log-message2',
+        interval: '45s',
+    },
+    {
+        name: 'log-message3',
+    },
+];
 
 const bree = new Bree({
     logger: logger.globalLogger,
-    jobs: [
-        {
-            name: 'log-message',
-            interval: '30s',
-        },
-        {
-            name: 'log-message2',
-            interval: '45s',
-        },
-        {
-            name: 'log-message3',
-        },
-    ],
-    workerMessageHandler(metadata) {
-        // workaround until the `worker deleted` is properly
-        // emitted from the bree library
-        // https://github.com/breejs/bree/issues/151
-        if (metadata.message == 'done') {
-            bree.emit('worker deleted', metadata.name);
+    root: externalConfig.root || path.join(__dirname, 'jobs'),
+    jobs: externalConfig.jobs || jobs,
+    workerMessageHandler() {
+        // handle custom worker messages
+        if (externalConfig.workerMessageHandler) {
+            externalConfig.workerMessageHandler.apply(this, arguments);
         }
     },
 });

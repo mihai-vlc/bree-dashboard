@@ -1,6 +1,6 @@
 {
     "name": "bree-dashboard",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A simple nodejs application to run and display bree jobs.",
     "main": "main.js",
     "scripts": {
@@ -16,7 +16,7 @@
     "dependencies": {
         "@fastify/session": "^6.3.0",
         "better-sqlite3": "^7.4.6",
-        "bree": "^7.1.4",
+        "bree": "^7.1.5",
         "fastify": "^3.25.3",
         "fastify-cookie": "^5.4.0",
         "fastify-csrf": "^3.1.0",

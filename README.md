@@ -10,15 +10,51 @@ Bree: https://github.com/breejs/bree
 
 ```
 git clone https://github.com/ionutvmi/bree-dashboard.git
+cd bree-dashboard
 pnpm install
 pnpm run start
+```
+
+## Define the jobs
+
+The jobs can be created in the `jobs` folder and configured in the `main.js` file.
+
+If you would like to keep the jobs in a separate repository you can create
+an `external-jobs/` folder and a file named `external-jobs/config.js` the which
+will take priority over the configuration from `main.js`.
+
+```sh
+mkdir external-jobs
+cd external-jobs
+git init
+touch config.js
+```
+
+The `external-jobs/config.js` file should export an object with job configurations.
+
+```js
+// external-jobs/config.js
+const path = require('path');
+module.exports = {
+    root: __dirname,
+    jobs: [
+        {
+            name: 'some-job',
+            path: path.join(__dirname, 'some-job.js'),
+            interval: '10s',
+        },
+    ],
+    workerMessageHandler(metadata) {
+        console.log('workerMessageHandler', metadata);
+    },
+};
 ```
 
 ## Workers
 
 Example worker for an asynchronous flow:
 
-```
+```js
 let AbstractWorker = require('../worker/AbstractWorker');
 
 class Worker extends AbstractWorker {
@@ -41,12 +77,11 @@ let worker = new Worker(__filename);
 worker.start().catch(function (e) {
     console.error(e);
 });
-
 ```
 
 For synchronous flow:
 
-```
+```js
 let AbstractWorker = require('../worker/AbstractWorker');
 
 class Worker extends AbstractWorker {
@@ -79,7 +114,15 @@ When clicking on an execution log the information is displayed from the sqlite d
 
 ## Release notes
 
-Jan 1st 2022 - Initial release
+Jan 8th 2022
+
+-   Upgrades bree to the latest version
+-   Adds support for the `external-jobs` folder to allow the maintenance of the jobs
+    in a separate repo.
+
+Jan 1st 2022
+
+-   Initial release
 
 ## Author
 

@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@fastify/session': ^6.3.0
   better-sqlite3: ^7.4.6
-  bree: ^7.1.4
+  bree: ^7.1.5
   fastify: ^3.25.3
   fastify-cookie: ^5.4.0
   fastify-csrf: ^3.1.0
@@ -18,7 +18,7 @@ specifiers:
 dependencies:
   '@fastify/session': 6.3.0
   better-sqlite3: 7.4.6
-  bree: 7.1.4
+  bree: 7.1.5
   fastify: 3.25.3
   fastify-cookie: 5.4.0
   fastify-csrf: 3.1.0
@@ -251,8 +251,8 @@ packages:
       fill-range: 7.0.1
     dev: true
 
-  /bree/7.1.4:
-    resolution: {integrity: sha512-HggOjoMlsK7SOQ8Mvu1bCjoBPr51EuPG8ov55t3SwWKFbFjKl8KPKWSgKtcaN42el/AHqisaz/Cm0vNa7p9cMg==}
+  /bree/7.1.5:
+    resolution: {integrity: sha512-YAs4VQDjc6p3NhNNHBkS9NXK4wryeMq7Y/SCMcgFh0cSD4oXk7B9v53/cqzoejdelD30KEliumzrd4awka+YhQ==}
     engines: {node: '>= 12.11.0'}
     dependencies:
       '@breejs/later': 4.1.0
