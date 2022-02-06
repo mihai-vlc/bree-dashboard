@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const server = require('fastify')({ logger: true });
 const POV = require('point-of-view');
 let { Liquid } = require('liquidjs');
@@ -100,7 +102,14 @@ server.get('/executions', function (request, reply) {
 // Run the server!
 const start = async () => {
     try {
-        await server.listen(3000);
+        let port = process.env.BREE_DASHBOARD_PORT;
+
+        if (port) {
+            await server.listen(port);
+        } else {
+            // use a random available port
+            await server.listen();
+        }
     } catch (err) {
         server.log.error(err);
         process.exit(1);

@@ -15,6 +15,8 @@ pnpm install
 pnpm run start
 ```
 
+To change the port of the server set the `BREE_DASHBOARD_PORT` environment variable.
+
 ## Define the jobs
 
 The jobs can be created in the `jobs` folder and configured in the `main.js` file.
@@ -113,6 +115,11 @@ When clicking on an execution log the information is displayed from the sqlite d
 ![execution-log](./screenshots/execution-log.png)
 
 ## Release notes
+
+Feb 6th 2022
+
+-   Stores the `uikit` library files locally
+-   Adds support for chaining the server port via environment variables
 
 Jan 8th 2022
 
