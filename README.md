@@ -131,6 +131,11 @@ When clicking on an execution log the information is displayed from the sqlite d
 
 ## Release notes
 
+Feb 8th 2022
+
+-   Adds support for enabling basic auth.
+-   Documents the environemnt variables.
+
 Feb 6th 2022
 
 -   Stores the `uikit` library files locally
