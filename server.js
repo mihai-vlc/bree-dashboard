@@ -23,7 +23,7 @@ server.register(POV, {
 server.register(require('fastify-formbody'));
 server.register(require('fastify-cookie'));
 server.register(require('@fastify/session'), {
-    secret: '12344123441234412344123441234412344',
+    secret: process.env.BREE_DASHBOARD_SESSION_SECRET || 'BzFQnUEU5utk38y8wUsvQaHdxwxunfRU',
     cookie: {
         secure: 'auto',
     },
