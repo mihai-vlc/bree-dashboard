@@ -17,6 +17,21 @@ pnpm run start
 
 To change the port of the server set the `BREE_DASHBOARD_PORT` environment variable.
 
+## Configure
+
+The following environment variables can be used to customize the setup of the dashboard:
+
+```
+BREE_DASHBOARD_PORT=3000
+BREE_DASHBOARD_SESSION_SECRET=Lm4AMjYkKnX5HpfqMVNRDK9vzke3CARv
+
+BREE_DASHBOARD_BASIC_AUTH=true
+BREE_DASHBOARD_USERNAME=admin
+BREE_DASHBOARD_PASSWORD=12345
+```
+
+They environment is loaded via the `dotenv` package.
+
 ## Define the jobs
 
 The jobs can be created in the `jobs` folder and configured in the `main.js` file.

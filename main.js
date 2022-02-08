@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+require('dotenv').config();
+
 const Bree = require('bree');
 const logger = require('./logger');
 const server = require('./server');

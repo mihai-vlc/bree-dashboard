@@ -19,6 +19,7 @@
         "bree": "^7.1.5",
         "dotenv": "^16.0.0",
         "fastify": "^3.25.3",
+        "fastify-basic-auth": "^2.2.0",
         "fastify-cookie": "^5.4.0",
         "fastify-csrf": "^3.1.0",
         "fastify-formbody": "^5.2.0",

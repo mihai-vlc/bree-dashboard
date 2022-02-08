@@ -6,6 +6,7 @@ specifiers:
   bree: ^7.1.5
   dotenv: ^16.0.0
   fastify: ^3.25.3
+  fastify-basic-auth: ^2.2.0
   fastify-cookie: ^5.4.0
   fastify-csrf: ^3.1.0
   fastify-formbody: ^5.2.0
@@ -22,6 +23,7 @@ dependencies:
   bree: 7.1.5
   dotenv: 16.0.0
   fastify: 3.25.3
+  fastify-basic-auth: 2.2.0
   fastify-cookie: 5.4.0
   fastify-csrf: 3.1.0
   fastify-formbody: 5.2.0
@@ -192,6 +194,13 @@ packages:
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+    dev: false
+
+  /basic-auth/2.0.1:
+    resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
+    engines: {node: '>= 0.8'}
+    dependencies:
+      safe-buffer: 5.1.2
     dev: false
 
   /better-sqlite3/7.4.6:
@@ -617,6 +626,15 @@ packages:
 
   /fast-safe-stringify/2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+    dev: false
+
+  /fastify-basic-auth/2.2.0:
+    resolution: {integrity: sha512-xXeNhyhONlQNoWIzy9rhms0td6PFL1KCRqu0lkEpd54Ju4dHLbB/woPwtK0Vutuqy0sDav77If6UtdfDajx44Q==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      basic-auth: 2.0.1
+      fastify-plugin: 3.0.0
+      http-errors: 1.8.1
     dev: false
 
   /fastify-cookie/5.4.0:

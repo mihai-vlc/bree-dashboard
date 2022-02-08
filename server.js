@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const server = require('fastify')({ logger: true });
 const POV = require('point-of-view');
 let { Liquid } = require('liquidjs');
@@ -29,6 +27,28 @@ server.register(require('@fastify/session'), {
     },
 });
 server.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' });
+
+server.register(require('fastify-basic-auth'), {
+    validate: validate,
+    authenticate: true,
+});
+
+function validate(username, password, req, reply, done) {
+    if (
+        username === process.env.BREE_DASHBOARD_USERNAME &&
+        password === process.env.BREE_DASHBOARD_PASSWORD
+    ) {
+        done();
+    } else {
+        done(new Error('Invalid credentials !'));
+    }
+}
+
+if (process.env.BREE_DASHBOARD_BASIC_AUTH == 'true') {
+    server.after(() => {
+        server.addHook('onRequest', server.basicAuth);
+    });
+}
 
 server.register(require('fastify-static'), {
     root: path.join(__dirname, 'public'),
