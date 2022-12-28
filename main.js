@@ -10,9 +10,9 @@ const store = require('./store');
 
 let externalConfig = {};
 
-// if (fs.existsSync('./external-jobs/config.js')) {
-//     externalConfig = require('./external-jobs/config');
-// }
+if (fs.existsSync('./external-jobs/config.js')) {
+    externalConfig = require('./external-jobs/config');
+}
 
 // example jobs used as fallback if the external config doesn't exist
 let jobs = [
