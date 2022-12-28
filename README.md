@@ -162,5 +162,5 @@ Jan 1st 2022
 Mihai Ionut Vilcu
 
 -   [github/ionutvmi](https://github.com/ionutvmi)
--   [twitter/mihaivlc93](http://twitter.com/mihaivlc93)
+-   [twitter/mihai_vlc](http://twitter.com/mihai_vlc)
 
