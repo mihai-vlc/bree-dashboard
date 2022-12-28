@@ -1,5 +1,4 @@
 const server = require('fastify')({ logger: true });
-const POV = require('point-of-view');
 let { Liquid } = require('liquidjs');
 let path = require('path');
 
@@ -12,23 +11,25 @@ const engine = new Liquid({
     extname: '.liquid',
 });
 
-server.register(POV, {
+server.register(require('@fastify/view'), {
     engine: {
         liquid: engine,
     },
 });
 
-server.register(require('fastify-formbody'));
-server.register(require('fastify-cookie'));
+server.register(require('@fastify/formbody'));
+server.register(require('@fastify/cookie'));
 server.register(require('@fastify/session'), {
     secret: process.env.BREE_DASHBOARD_SESSION_SECRET || 'BzFQnUEU5utk38y8wUsvQaHdxwxunfRU',
     cookie: {
         secure: 'auto',
     },
 });
-server.register(require('fastify-csrf'), { sessionPlugin: 'fastify-session' });
+server.register(require('@fastify/csrf-protection'), {
+    sessionPlugin: '@fastify/session',
+});
 
-server.register(require('fastify-basic-auth'), {
+server.register(require('@fastify/basic-auth'), {
     validate: validate,
     authenticate: true,
 });
@@ -50,7 +51,7 @@ if (process.env.BREE_DASHBOARD_BASIC_AUTH == 'true') {
     });
 }
 
-server.register(require('fastify-static'), {
+server.register(require('@fastify/static'), {
     root: path.join(__dirname, 'public'),
     prefix: '/public/', // optional: default '/'
 });
@@ -70,7 +71,7 @@ server.get('/', async (request, reply) => {
 server.post(
     '/job',
     {
-        preValidation: function (request, reply) {
+        preValidation: function () {
             return server.csrfProtection.apply(this, arguments);
         },
     },
@@ -92,7 +93,7 @@ server.post(
 server.post(
     '/executions',
     {
-        preValidation: function (request, reply) {
+        preValidation: function () {
             return server.csrfProtection.apply(this, arguments);
         },
     },

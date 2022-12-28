@@ -6,13 +6,13 @@ function getStatus(job) {
     let status = 'done';
     let icon = 'check';
 
-    if (bree.workers[name]) {
+    if (bree.workers.get(name)) {
         status = 'active';
         icon = 'refresh';
-    } else if (bree.timeouts[name]) {
+    } else if (bree.timeouts.get(name)) {
         status = 'delayed';
         icon = 'future';
-    } else if (bree.intervals[name]) {
+    } else if (bree.intervals.get(name)) {
         status = 'waiting';
         icon = 'clock';
     }

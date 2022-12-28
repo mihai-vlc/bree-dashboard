@@ -1,3 +1,4 @@
+
 # Bree dashboard
 
 A simple nodejs application to run and display bree jobs.
@@ -11,8 +12,8 @@ Bree: https://github.com/breejs/bree
 ```
 git clone https://github.com/ionutvmi/bree-dashboard.git
 cd bree-dashboard
-pnpm install
-pnpm run start
+npm install
+npm run start
 ```
 
 To change the port of the server set the `BREE_DASHBOARD_PORT` environment variable.
@@ -131,6 +132,11 @@ When clicking on an execution log the information is displayed from the sqlite d
 
 ## Release notes
 
+Dec 28th 2022 - 2.0.0
+
+-   Upgrades all dependencies to the latest version
+
+
 Feb 8th 2022
 
 -   Adds support for enabling basic auth.
@@ -157,3 +163,4 @@ Mihai Ionut Vilcu
 
 -   [github/ionutvmi](https://github.com/ionutvmi)
 -   [twitter/mihaivlc93](http://twitter.com/mihaivlc93)
+
