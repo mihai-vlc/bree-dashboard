@@ -32,7 +32,7 @@ BREE_DASHBOARD_USERNAME=admin
 BREE_DASHBOARD_PASSWORD=12345
 ```
 
-They environment is loaded via the `dotenv` package.  
+They environment is loaded via the `dotenv` package.
 
 Use `0.0.0.0` as the port if you want to expose the service to other systems.
 
@@ -130,7 +130,8 @@ The logs for the workers are stored in 2 locations:
 -   on the disk in a file named log.txt
 -   in a sqlite database jobs.db (for each execution)
 
-When clicking on an execution log the information is displayed from the sqlite database file.
+When clicking on an execution log the information is displayed from the sqlite database file.  
+
 ![execution-log](./screenshots/execution-log.png)
 
 ## Release notes
@@ -138,7 +139,6 @@ When clicking on an execution log the information is displayed from the sqlite d
 Dec 28th 2022 - 2.0.0
 
 -   Upgrades all dependencies to the latest version
-
 
 Feb 8th 2022
 
@@ -164,7 +164,6 @@ Jan 1st 2022
 
 Mihai Ionut Vilcu
 
--   [github/ionutvmi](https://github.com/ionutvmi)
--   [twitter/mihaivlc93](http://twitter.com/mihaivlc93)
-
+-   [github/mihai-vlc](https://github.com/mihai-vlc)
+-   [twitter/mihai_vlc](http://twitter.com/mihai_vlc)
 
