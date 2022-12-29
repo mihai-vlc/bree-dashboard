@@ -24,6 +24,7 @@ The following environment variables can be used to customize the setup of the da
 
 ```
 BREE_DASHBOARD_PORT=3000
+BREE_DASHBOARD_HOST=127.0.0.1
 BREE_DASHBOARD_SESSION_SECRET=Lm4AMjYkKnX5HpfqMVNRDK9vzke3CARv
 
 BREE_DASHBOARD_BASIC_AUTH=true
@@ -31,7 +32,9 @@ BREE_DASHBOARD_USERNAME=admin
 BREE_DASHBOARD_PASSWORD=12345
 ```
 
-They environment is loaded via the `dotenv` package.
+They environment is loaded via the `dotenv` package.  
+
+Use `0.0.0.0` as the port if you want to expose the service to other systems.
 
 ## Define the jobs
 
@@ -163,4 +166,5 @@ Mihai Ionut Vilcu
 
 -   [github/ionutvmi](https://github.com/ionutvmi)
 -   [twitter/mihaivlc93](http://twitter.com/mihaivlc93)
+
 

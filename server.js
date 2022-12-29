@@ -124,12 +124,18 @@ server.get('/executions', function (request, reply) {
 const start = async () => {
     try {
         let port = process.env.BREE_DASHBOARD_PORT;
+        let host = process.env.BREE_DASHBOARD_HOST || '127.0.0.1';
 
         if (port) {
-            await server.listen(port);
+            await server.listen({
+                port: port,
+                host: host,
+            });
         } else {
             // use a random available port
-            await server.listen();
+            await server.listen({
+                host: host,
+            });
         }
     } catch (err) {
         server.log.error(err);
