@@ -1,5 +1,6 @@
 log.txt
 jobs.db
+azure
 node_modules
 external-jobs
 .env

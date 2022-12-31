@@ -32,8 +32,8 @@ module.exports = {
         let results = db
             .prepare(
                 `SELECT rowid, start_time, end_time, result_code
-                FROM jobsExecution 
-                WHERE job_id = ? 
+                FROM jobsExecution
+                WHERE job_id = ?
                 ORDER BY start_time DESC`
             )
             .all(jobId);
@@ -65,9 +65,9 @@ module.exports = {
     getExecutionLogs(executionId) {
         let results = db
             .prepare(
-                `SELECT timestamp, message 
-            FROM log 
-            WHERE execution_id = ? 
+                `SELECT timestamp, message
+            FROM log
+            WHERE execution_id = ?
             ORDER BY timestamp ASC`
             )
             .all(executionId);
