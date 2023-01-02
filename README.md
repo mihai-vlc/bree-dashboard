@@ -10,7 +10,7 @@ Bree: https://github.com/breejs/bree
 ## Install
 
 ```
-git clone https://github.com/ionutvmi/bree-dashboard.git
+git clone https://github.com/mihai-vlc/bree-dashboard.git
 cd bree-dashboard
 npm install
 npm run start
@@ -34,7 +34,7 @@ BREE_DASHBOARD_PASSWORD=12345
 
 They environment is loaded via the `dotenv` package.
 
-Use `0.0.0.0` as the port if you want to expose the service to other systems.
+Use `0.0.0.0` as the host if you want to expose the service to other computers in the network.
 
 ## Define the jobs
 
@@ -160,10 +160,26 @@ Jan 1st 2022
 
 -   Initial release
 
+## Developing
+
+```sh
+git clone https://github.com/mihai-vlc/bree-dashboard.git
+npm install
+npm run start:dev
+```
+
+To make changes to the database structure:
+```sh
+npm run migration-create
+```
+
+The migrations are executed when the application starts.
+
 ## Author
 
 Mihai Ionut Vilcu
 
 -   [github/mihai-vlc](https://github.com/mihai-vlc)
 -   [twitter/mihai_vlc](http://twitter.com/mihai_vlc)
+
 

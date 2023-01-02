@@ -4,9 +4,10 @@ const path = require('path');
 require('dotenv').config();
 
 const Bree = require('bree');
-const logger = require('./logger');
+const logger = require('./logger').globalLogger;
 const server = require('./server');
 const store = require('./store');
+const migrations = require('./migrations');
 
 let externalConfig = {};
 
@@ -30,7 +31,7 @@ let jobs = [
 ];
 
 const bree = new Bree({
-    logger: logger.globalLogger,
+    logger: logger,
     root: externalConfig.root || path.join(__dirname, 'jobs'),
     jobs: externalConfig.jobs || jobs,
     workerMessageHandler() {
@@ -41,6 +42,16 @@ const bree = new Bree({
     },
 });
 
-store.init(bree);
-bree.start();
-server.start();
+async function main() {
+    const result = await migrations.run();
+
+    if (!result) {
+        process.exit(1);
+    }
+
+    store.init(bree);
+    bree.start();
+    server.start();
+}
+
+main().catch(logger.error);
