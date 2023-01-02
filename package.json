@@ -7,7 +7,7 @@
         "start": "node main.js",
         "start:dev": "nodemon main.js",
         "migration-create": "node tools/new-migration.js",
-        "migration-down": "node -e 'require(\"./migrations\").down()'"
+        "migration-down": "node tools/revert-migration.js"
     },
     "keywords": [
         "bree",

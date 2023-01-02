@@ -18,9 +18,10 @@ readline.question('Migration name: ', (inputName) => {
     }
 
     const prefix = formatInTimeZone(new Date(), 'UTC', 'yyyyMMddHHmm');
-    const fileName = `${prefix}-${inputName}.sql`;
+    const fileName = `${prefix}-${inputName}`;
 
-    writeFileSync(join(__dirname, '..', 'migrations', fileName), '');
+    writeFileSync(join(__dirname, '..', 'migrations', 'up', fileName + '.up.sql'), '');
+    writeFileSync(join(__dirname, '..', 'migrations', 'down', fileName) + '.down.sql', '');
 
     readline.close();
 });
