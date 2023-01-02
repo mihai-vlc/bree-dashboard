@@ -1,7 +1,3 @@
-const formatInTimeZone = require('date-fns-tz/formatInTimeZone');
-const { writeFileSync } = require('fs');
-const { join } = require('path');
-
 const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -9,7 +5,7 @@ const readline = require('readline').createInterface({
 
 readline.question('Migration name: ', (inputName) => {
     inputName = inputName.trim();
-    inputName = inputName.replace(/ +/g, '-');
+    inputName = inputName.replace(/[^a-zA-Z0-9]+/g, '-');
 
     if (!inputName) {
         console.log('ERROR: Invalid name');
@@ -17,11 +13,7 @@ readline.question('Migration name: ', (inputName) => {
         return;
     }
 
-    const prefix = formatInTimeZone(new Date(), 'UTC', 'yyyyMMddHHmm');
-    const fileName = `${prefix}-${inputName}`;
-
-    writeFileSync(join(__dirname, '..', 'migrations', 'up', fileName + '.up.sql'), '');
-    writeFileSync(join(__dirname, '..', 'migrations', 'down', fileName) + '.down.sql', '');
+    require('../migrations').create(inputName + '.sql');
 
     readline.close();
 });

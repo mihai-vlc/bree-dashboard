@@ -1,1 +1,0 @@
-require('../migrations').down();

@@ -1,3 +1,4 @@
+-- up migration
 CREATE TABLE
     IF NOT EXISTS jobsExecution (
         job_id TEXT NOT NULL,

@@ -1,69 +1,111 @@
-const { existsSync } = require('fs');
-const { join } = require('path');
-
+const fs = require('fs');
+const { join, dirname, basename } = require('path');
+const { Umzug } = require('umzug');
 const logger = require('./logger').globalLogger;
 
-var sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(join(__dirname, 'jobs.db'));
-const migrationsFolder = join(__dirname, 'migrations');
+class SQLiteClient {
+    constructor() {
+        const Database = require('better-sqlite3');
+        this.db = new Database(join(__dirname, 'jobs.db'));
+    }
+    async exec(sql) {
+        return this.db.exec(sql);
+    }
+    async run(sql, params) {
+        return this.db.prepare(sql).run(...params);
+    }
+    async get(sql, params) {
+        return this.db.prepare(sql).all(...params);
+    }
+}
 
-const { CommandsRunner, SQLite3Driver } = require('node-db-migration');
-const migrations = new CommandsRunner({
-    driver: new SQLite3Driver(db),
-    directoryWithScripts: join(migrationsFolder, 'up'),
+const umzug = new Umzug({
+    migrations: {
+        glob: 'migrations/*.sql',
+        resolve: ({ name, path: filePath, context }) => ({
+            name,
+            up: async () => {
+                const sql = fs.readFileSync(filePath, 'utf8');
+
+                if (!sql) {
+                    logger.info(`No sql instructions found for ${name}`);
+                    return;
+                }
+
+                return context.exec(sql);
+            },
+            down: async () => {
+                const downPath = join(dirname(filePath), 'down', basename(filePath));
+
+                if (!fs.existsSync(downPath)) {
+                    logger.info(`No corresponding down migration found for ${name}`);
+                    return;
+                }
+
+                const sql = fs.readFileSync(downPath, 'utf8');
+
+                if (!sql) {
+                    logger.info(`No sql instructions found for ${name}`);
+                    return;
+                }
+
+                return context.exec(sql);
+            },
+        }),
+    },
+    storage: {
+        async executed({ context }) {
+            await context.exec(`CREATE TABLE IF NOT EXISTS migrations(name TEXT)`);
+            const results = await context.get(`SELECT name FROM migrations`, []);
+            return results.map((r) => r.name);
+        },
+        async logMigration({ name, context: client }) {
+            await client.run(`INSERT INTO migrations(name) VALUES (?)`, [name]);
+        },
+        async unlogMigration({ name, context: client }) {
+            await client.run(`DELETE FROM migrations WHERE name = ?`, [name]);
+        },
+    },
+    context: new SQLiteClient(),
     logger: {
-        success: (msg) => logger.info(msg),
-        info: (msg) => logger.info(msg),
-        infoParams: (msg) => logger.info(msg),
-        infoParamsColor: (msg) => logger.info(msg),
-        colors: {},
+        info: (msg) => {
+            if (typeof msg == 'object') {
+                logger.info(JSON.stringify(msg));
+                return;
+            }
+            logger.info(msg);
+        },
+    },
+    create: {
+        folder: 'migrations',
     },
 });
 
 module.exports = {
     async run() {
         try {
-            await migrations.doInit();
-            await migrations.findAndRunMigrations(false);
+            await umzug.up();
+            logger.info('Completed the migrations.');
             return true;
         } catch (e) {
             logger.error(`Failed to execute the database migrations: ${e}, ${e.stack}`);
         }
         return false;
     },
-
     async down() {
         try {
-            const completedMigrations = await migrations.getCompletedMigrations(false);
-
-            if (completedMigrations.length == 0) {
-                logger.info('No completed migrations found');
-                return;
-            }
-
-            const lastMigration = completedMigrations.pop();
-            const fileName = lastMigration.name.replace(/\.up\.sql$/, '.down.sql');
-            const fullPath = join(migrationsFolder, 'down', fileName);
-
-            if (existsSync(fullPath)) {
-                const query = await migrations.getScriptStr(join('..', 'down', fileName));
-                const error = await migrations.driver.executeMultipleStatements(query);
-
-                if (error) {
-                    throw new Error(error);
-                }
-                logger.info(`Executed ${fullPath} successfully !`);
-            } else {
-                logger.info(`${fullPath} was not found !`);
-            }
-
-            await migrations.runSql(
-                `DELETE FROM ${migrations.driver.migrationTable} WHERE id = ?`,
-                [lastMigration.id]
-            );
-            logger.info(`Removed ${lastMigration.name} from the completed list`);
+            const migration = await umzug.down();
+            logger.info(`Removed ${migration.name} from the completed list`);
         } catch (e) {
-            logger.error(`Failed to execute the database migrations: ${e}, ${e.stack}`);
+            logger.error(`Failed to revert the database migration: ${e}, ${e.stack}`);
         }
     },
+
+    async create(name) {
+        await umzug.create({ name });
+    },
 };
+
+if (require.main === module) {
+    umzug.runAsCLI();
+}
