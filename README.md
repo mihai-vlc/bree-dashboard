@@ -145,7 +145,7 @@ When clicking on an execution log the information is displayed from the sqlite d
 
 ## Release notes
 
-Dec 28th 2022 - 3.0.0
+Jan 14th 2023 - 3.0.0
 
 -   Migrated the codebase to ESM
 
