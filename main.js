@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import dotenv from 'dotenv';
 
 import Bree from 'bree';
-import { globalLogger as logger } from './logger.js';
+import { globalLogger } from './logger.js';
 import * as server from './server.js';
 import * as store from './store.js';
 import * as migrations from './migrations.js';
@@ -37,7 +37,7 @@ let jobs = [
 ];
 
 const bree = new Bree({
-    logger: logger,
+    logger: globalLogger,
     root: externalConfig.root || join(__dirname, 'jobs'),
     jobs: externalConfig.jobs || jobs,
     workerMessageHandler() {
@@ -61,4 +61,4 @@ async function main() {
     server.start();
 }
 
-main().catch(logger.error);
+main().catch(globalLogger.error);

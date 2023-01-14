@@ -1,7 +1,7 @@
 import { basename, extname } from 'path';
 import { startExecution, endExecution } from '../monitor.js';
 import { parentPort } from 'worker_threads';
-import logger from '../logger.js';
+import * as logger from '../logger.js';
 
 export default class AbstractWorker {
     constructor(filePath) {
