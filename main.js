@@ -17,9 +17,9 @@ dotenv.config();
 
 let externalConfig = {};
 
-// if (existsSync('./external-jobs/config.js')) {
-//     externalConfig = await import('./external-jobs/config.js');
-// }
+if (existsSync('./external-jobs/config.js')) {
+    externalConfig = await import('./external-jobs/config.js');
+}
 
 // example jobs used as fallback if the external config doesn't exist
 let jobs = [
