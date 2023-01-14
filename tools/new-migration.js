@@ -1,4 +1,7 @@
-const readline = require('readline').createInterface({
+import { createInterface } from 'readline';
+import migrations from '../migrations.js';
+
+const readline = createInterface({
     input: process.stdin,
     output: process.stdout,
 });
@@ -13,7 +16,7 @@ readline.question('Migration name: ', (inputName) => {
         return;
     }
 
-    require('../migrations').create(inputName + '.sql');
+    migrations.create(inputName + '.sql');
 
     readline.close();
 });

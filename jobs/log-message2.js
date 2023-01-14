@@ -1,4 +1,7 @@
-let AbstractWorker = require('../worker/AbstractWorker');
+import AbstractWorker from '../worker/AbstractWorker.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
 
 class Worker extends AbstractWorker {
     async run() {

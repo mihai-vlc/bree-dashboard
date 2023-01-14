@@ -1,4 +1,3 @@
-
 # Bree dashboard
 
 A simple nodejs application to run and display bree jobs.
@@ -55,20 +54,24 @@ The `external-jobs/config.js` file should export an object with job configuratio
 
 ```js
 // external-jobs/config.js
-const path = require('path');
-module.exports = {
-    root: __dirname,
-    jobs: [
-        {
-            name: 'some-job',
-            path: path.join(__dirname, 'some-job.js'),
-            interval: '10s',
-        },
-    ],
-    workerMessageHandler(metadata) {
-        console.log('workerMessageHandler', metadata);
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const root = __dirname;
+export const jobs = [
+    {
+        name: 'some-job',
+        path: path.join(__dirname, 'some-job.js'),
+        interval: '10s',
     },
-};
+];
+
+export function workerMessageHandler(metadata) {
+    console.log('workerMessageHandler', metadata);
+}
 ```
 
 ## Workers
@@ -76,7 +79,10 @@ module.exports = {
 Example worker for an asynchronous flow:
 
 ```js
-let AbstractWorker = require('../worker/AbstractWorker');
+import AbstractWorker from '../worker/AbstractWorker.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
 
 class Worker extends AbstractWorker {
     async run() {
@@ -103,7 +109,10 @@ worker.start().catch(function (e) {
 For synchronous flow:
 
 ```js
-let AbstractWorker = require('../worker/AbstractWorker');
+import AbstractWorker from '../worker/AbstractWorker.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
 
 class Worker extends AbstractWorker {
     async run() {
@@ -130,11 +139,15 @@ The logs for the workers are stored in 2 locations:
 -   on the disk in a file named log.txt
 -   in a sqlite database jobs.db (for each execution)
 
-When clicking on an execution log the information is displayed from the sqlite database file.  
+When clicking on an execution log the information is displayed from the sqlite database file.
 
 ![execution-log](./screenshots/execution-log.png)
 
 ## Release notes
+
+Dec 28th 2022 - 3.0.0
+
+-   Migrated the codebase to ESM
 
 Dec 28th 2022 - 2.0.0
 
@@ -169,6 +182,7 @@ npm run start:dev
 ```
 
 To make changes to the database structure:
+
 ```sh
 npm run migration-create
 ```
@@ -181,5 +195,3 @@ Mihai Ionut Vilcu
 
 -   [github/mihai-vlc](https://github.com/mihai-vlc)
 -   [twitter/mihai_vlc](http://twitter.com/mihai_vlc)
-
-

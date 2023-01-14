@@ -1,11 +1,17 @@
-const fs = require('fs');
-const { join, dirname, basename } = require('path');
-const { Umzug } = require('umzug');
-const logger = require('./logger').globalLogger;
+import { readFileSync, existsSync } from 'fs';
+import { Umzug } from 'umzug';
+import { globalLogger as logger } from './logger.js';
+import Database from 'better-sqlite3';
+import esMain from 'es-main';
+
+import { join, dirname, basename } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class SQLiteClient {
     constructor() {
-        const Database = require('better-sqlite3');
         this.db = new Database(join(__dirname, 'jobs.db'));
     }
     async exec(sql) {
@@ -25,7 +31,7 @@ const umzug = new Umzug({
         resolve: ({ name, path: filePath, context }) => ({
             name,
             up: async () => {
-                const sql = fs.readFileSync(filePath, 'utf8');
+                const sql = readFileSync(filePath, 'utf8');
 
                 if (!sql) {
                     logger.info(`No sql instructions found for ${name}`);
@@ -37,12 +43,12 @@ const umzug = new Umzug({
             down: async () => {
                 const downPath = join(dirname(filePath), 'down', basename(filePath));
 
-                if (!fs.existsSync(downPath)) {
+                if (!existsSync(downPath)) {
                     logger.info(`No corresponding down migration found for ${name}`);
                     return;
                 }
 
-                const sql = fs.readFileSync(downPath, 'utf8');
+                const sql = readFileSync(downPath, 'utf8');
 
                 if (!sql) {
                     logger.info(`No sql instructions found for ${name}`);
@@ -81,31 +87,28 @@ const umzug = new Umzug({
     },
 });
 
-module.exports = {
-    async run() {
-        try {
-            await umzug.up();
-            logger.info('Completed the migrations.');
-            return true;
-        } catch (e) {
-            logger.error(`Failed to execute the database migrations: ${e}, ${e.stack}`);
-        }
-        return false;
-    },
-    async down() {
-        try {
-            const migration = await umzug.down();
-            logger.info(`Removed ${migration.name} from the completed list`);
-        } catch (e) {
-            logger.error(`Failed to revert the database migration: ${e}, ${e.stack}`);
-        }
-    },
+export async function run() {
+    try {
+        await umzug.up();
+        logger.info('Completed the migrations.');
+        return true;
+    } catch (e) {
+        logger.error(`Failed to execute the database migrations: ${e}, ${e.stack}`);
+    }
+    return false;
+}
+export async function down() {
+    try {
+        const migration = await umzug.down();
+        logger.info(`Removed ${migration.name} from the completed list`);
+    } catch (e) {
+        logger.error(`Failed to revert the database migration: ${e}, ${e.stack}`);
+    }
+}
+export async function create(name) {
+    await umzug.create({ name });
+}
 
-    async create(name) {
-        await umzug.create({ name });
-    },
-};
-
-if (require.main === module) {
+if (esMain(import.meta)) {
     umzug.runAsCLI();
 }

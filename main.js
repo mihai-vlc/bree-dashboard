@@ -1,18 +1,24 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync } from 'fs';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+import Bree from 'bree';
+import { globalLogger } from './logger.js';
+import * as server from './server.js';
+import * as store from './store.js';
+import * as migrations from './migrations.js';
 
-const Bree = require('bree');
-const logger = require('./logger').globalLogger;
-const server = require('./server');
-const store = require('./store');
-const migrations = require('./migrations');
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config();
 
 let externalConfig = {};
 
-if (fs.existsSync('./external-jobs/config.js')) {
-    externalConfig = require('./external-jobs/config');
+if (existsSync('./external-jobs/config.js')) {
+    externalConfig = await import('./external-jobs/config.js');
 }
 
 // example jobs used as fallback if the external config doesn't exist
@@ -31,8 +37,8 @@ let jobs = [
 ];
 
 const bree = new Bree({
-    logger: logger,
-    root: externalConfig.root || path.join(__dirname, 'jobs'),
+    logger: globalLogger,
+    root: externalConfig.root || join(__dirname, 'jobs'),
     jobs: externalConfig.jobs || jobs,
     workerMessageHandler() {
         // handle custom worker messages
@@ -50,8 +56,9 @@ async function main() {
     }
 
     store.init(bree);
+
     bree.start();
     server.start();
 }
 
-main().catch(logger.error);
+main().catch(globalLogger.error);
