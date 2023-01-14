@@ -1,5 +1,11 @@
 import { format, createLogger, transports } from 'winston';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+import wbs from './helpers/winston-db-transport.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const myFormat = format.printf(({ level, message, _label, timestamp }) => {
     return `${timestamp} [${level.toUpperCase()}]: ${message}`;
@@ -17,8 +23,6 @@ export const globalLogger = createLogger({
     ],
 });
 export function getLogger(jobId, executionId) {
-    const wbs = require('./helpers/winston-db-transport');
-
     return createLogger({
         level: 'debug',
         defaultMeta: {

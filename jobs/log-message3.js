@@ -1,4 +1,4 @@
-let AbstractWorker = require('../worker/AbstractWorker');
+import AbstractWorker from '../worker/AbstractWorker.js';
 
 class Worker extends AbstractWorker {
     async run() {

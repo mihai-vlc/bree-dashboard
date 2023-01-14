@@ -1,9 +1,22 @@
 import fastify from 'fastify';
-import { Liquid } from 'liquidjs';
-import { join } from 'path';
+import fastifyView from '@fastify/view';
+import fastifyCookie from '@fastify/cookie';
+import fastifySession from '@fastify/session';
+import fastifyCSRF from '@fastify/csrf-protection';
+import fastifyFormbody from '@fastify/formbody';
+import fastifyStatic from '@fastify/static';
+import fastifyBasicAuth from '@fastify/basic-auth';
 
-import { getJobs, getRunner } from './store';
-import { clearExecution, getExecutionLogs } from './monitor';
+import { Liquid } from 'liquidjs';
+
+import { getJobs, getRunner } from './store.js';
+import { clearExecution, getExecutionLogs } from './monitor.js';
+
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const server = fastify({ logger: true });
 
@@ -13,25 +26,25 @@ const engine = new Liquid({
     extname: '.liquid',
 });
 
-server.register(require('@fastify/view'), {
+server.register(fastifyView, {
     engine: {
         liquid: engine,
     },
 });
 
-server.register(require('@fastify/formbody'));
-server.register(require('@fastify/cookie'));
-server.register(require('@fastify/session'), {
+server.register(fastifyFormbody);
+server.register(fastifyCookie);
+server.register(fastifySession, {
     secret: process.env.BREE_DASHBOARD_SESSION_SECRET || 'BzFQnUEU5utk38y8wUsvQaHdxwxunfRU',
     cookie: {
         secure: 'auto',
     },
 });
-server.register(require('@fastify/csrf-protection'), {
+server.register(fastifyCSRF, {
     sessionPlugin: '@fastify/session',
 });
 
-server.register(require('@fastify/basic-auth'), {
+server.register(fastifyBasicAuth, {
     validate: validate,
     authenticate: true,
 });
@@ -53,7 +66,7 @@ if (process.env.BREE_DASHBOARD_BASIC_AUTH == 'true') {
     });
 }
 
-server.register(require('@fastify/static'), {
+server.register(fastifyStatic, {
     root: join(__dirname, 'public'),
     prefix: '/public/', // optional: default '/'
 });

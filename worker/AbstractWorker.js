@@ -1,11 +1,12 @@
-let path = require('path');
-let monitor = require('../monitor');
-const { parentPort } = require('worker_threads');
+import { basename, extname } from 'path';
+import { startExecution, endExecution } from '../monitor.js';
+import { parentPort } from 'worker_threads';
+import logger from '../logger.js';
 
-module.exports = class AbstractWorker {
+export default class AbstractWorker {
     constructor(filePath) {
         this.filePath = filePath;
-        this.jobId = path.basename(filePath, path.extname(filePath));
+        this.jobId = basename(filePath, extname(filePath));
 
         if (parentPort) {
             parentPort.once('message', async (message) => {
@@ -17,8 +18,8 @@ module.exports = class AbstractWorker {
     }
 
     async start() {
-        this.executionId = monitor.startExecution(this.jobId);
-        this.logger = require('../logger').getLogger(this.jobId, this.executionId);
+        this.executionId = startExecution(this.jobId);
+        this.logger = logger.getLogger(this.jobId, this.executionId);
 
         this.resultCode = null;
         try {
@@ -39,7 +40,7 @@ module.exports = class AbstractWorker {
         if (this.resultCode == undefined) {
             this.resultCode = 'SUCCESS';
         }
-        monitor.endExecution(this.executionId, this.resultCode);
+        endExecution(this.executionId, this.resultCode);
 
         if (parentPort) {
             parentPort.postMessage('done');
@@ -53,7 +54,7 @@ module.exports = class AbstractWorker {
 
         this.logger.info('Work cancelled !');
 
-        monitor.endExecution(this.executionId);
+        endExecution(this.executionId);
 
         if (parentPort) {
             parentPort.postMessage('cancelled');
@@ -61,4 +62,4 @@ module.exports = class AbstractWorker {
             process.exit(0);
         }
     }
-};
+}

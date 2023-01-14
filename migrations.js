@@ -1,11 +1,17 @@
 import { readFileSync, existsSync } from 'fs';
-import { join, dirname, basename } from 'path';
 import { Umzug } from 'umzug';
-import { globalLogger as logger } from './logger';
+import { globalLogger as logger } from './logger.js';
+import Database from 'better-sqlite3';
+import esMain from 'es-main';
+
+import { join, dirname, basename } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 class SQLiteClient {
     constructor() {
-        const Database = require('better-sqlite3');
         this.db = new Database(join(__dirname, 'jobs.db'));
     }
     async exec(sql) {
@@ -103,6 +109,6 @@ export async function create(name) {
     await umzug.create({ name });
 }
 
-if (require.main === module) {
+if (esMain(import.meta)) {
     umzug.runAsCLI();
 }

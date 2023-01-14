@@ -1,10 +1,10 @@
-const Transport = require('winston-transport');
-const Database = require('better-sqlite3');
+import Transport from 'winston-transport';
+import Database from 'better-sqlite3';
 
 // Inherit from `winston-transport` so you can take advantage
 // of the base functionality and `.exceptions.handle()`.
 //
-module.exports = class Sqlite3 extends Transport {
+export default class Sqlite3 extends Transport {
     constructor(options) {
         super(options);
 
@@ -49,4 +49,4 @@ module.exports = class Sqlite3 extends Transport {
         // Perform the writing to the remote service
         callback();
     }
-};
+}

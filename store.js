@@ -1,3 +1,5 @@
+import * as monitor from './monitor.js';
+
 var state = {};
 
 function getStatus(job) {
@@ -33,10 +35,8 @@ export function getRunner() {
     };
 }
 export function getJobs() {
-    let monitor = require('./monitor');
-
     return state.bree.config.jobs.map(function (job) {
-        let executions = monitor.getExecutions(job.name);
+        const executions = monitor.getExecutions(job.name);
 
         return {
             name: job.name,
