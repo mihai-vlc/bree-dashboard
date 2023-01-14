@@ -1,6 +1,6 @@
 {
     "name": "bree-dashboard",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "A simple nodejs application to run and display bree jobs.",
     "type": "module",
     "scripts": {
