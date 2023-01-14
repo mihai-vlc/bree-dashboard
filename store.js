@@ -23,32 +23,28 @@ function getStatus(job) {
     };
 }
 
-module.exports = {
-    init(bree) {
-        state.bree = bree;
-    },
+export function init(bree) {
+    state.bree = bree;
+}
+export function getRunner() {
+    return {
+        runJob: async (id) => state.bree.run(id),
+        stopJob: async (id) => state.bree.stop(id),
+    };
+}
+export function getJobs() {
+    let monitor = require('./monitor');
 
-    getRunner() {
+    return state.bree.config.jobs.map(function (job) {
+        let executions = monitor.getExecutions(job.name);
+
         return {
-            runJob: async (id) => state.bree.run(id),
-            stopJob: async (id) => state.bree.stop(id),
+            name: job.name,
+            status: getStatus(job),
+            interval: job.interval,
+            path: job.path,
+            topExecutions: executions.slice(0, 3),
+            otherExecutions: executions.slice(3),
         };
-    },
-
-    getJobs() {
-        let monitor = require('./monitor');
-
-        return state.bree.config.jobs.map(function (job) {
-            let executions = monitor.getExecutions(job.name);
-
-            return {
-                name: job.name,
-                status: getStatus(job),
-                interval: job.interval,
-                path: job.path,
-                topExecutions: executions.slice(0, 3),
-                otherExecutions: executions.slice(3),
-            };
-        });
-    },
-};
+    });
+}

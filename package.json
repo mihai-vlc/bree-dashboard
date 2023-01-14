@@ -3,6 +3,7 @@
     "version": "2.0.0",
     "description": "A simple nodejs application to run and display bree jobs.",
     "main": "main.js",
+    "type": "module",
     "scripts": {
         "start": "node main.js",
         "start:dev": "nodemon main.js",
@@ -29,7 +30,7 @@
         "dotenv": "16.0.3",
         "fastify": "4.10.2",
         "liquidjs": "10.3.3",
-        "umzug": "^3.2.1",
+        "umzug": "3.2.1",
         "winston": "3.8.2",
         "winston-transport": "4.5.0"
     },

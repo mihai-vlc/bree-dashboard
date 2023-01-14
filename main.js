@@ -1,17 +1,18 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync } from 'fs';
+import { join } from 'path';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+import Bree from 'bree';
+import { globalLogger as logger } from './logger';
+import server from './server';
+import store from './store';
+import migrations from './migrations';
 
-const Bree = require('bree');
-const logger = require('./logger').globalLogger;
-const server = require('./server');
-const store = require('./store');
-const migrations = require('./migrations');
+dotenv.config();
 
 let externalConfig = {};
 
-if (fs.existsSync('./external-jobs/config.js')) {
+if (existsSync('./external-jobs/config.js')) {
     externalConfig = require('./external-jobs/config');
 }
 
@@ -32,7 +33,7 @@ let jobs = [
 
 const bree = new Bree({
     logger: logger,
-    root: externalConfig.root || path.join(__dirname, 'jobs'),
+    root: externalConfig.root || join(__dirname, 'jobs'),
     jobs: externalConfig.jobs || jobs,
     workerMessageHandler() {
         // handle custom worker messages
@@ -50,6 +51,7 @@ async function main() {
     }
 
     store.init(bree);
+
     bree.start();
     server.start();
 }
